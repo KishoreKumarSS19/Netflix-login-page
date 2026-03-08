@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
@@ -15,27 +15,13 @@ function Login() {
       return;
     }
 
-    try {
-      console.log("Sending login request to backend with:", { email, password });
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      const response = await axios.post(`${API_URL}/login`, {
-        email: email.trim(),
-        password: password.trim()
-      });
-      console.log("Backend response:", response.status, response.data);
-
-      if (response.status === 200) {
-        setError('');
-        // Redirect to dashboard on successful login
-        navigate('/dashboard');
-      }
-    } catch (err) {
-      console.error("Login failed with error:", err);
-      if (err.response && err.response.data && err.response.data.error) {
-        setError(err.response.data.error);
-      } else {
-        setError('An error occurred during login. Please try again.');
-      }
+    const trimmedEmail = email.trim();
+    if (trimmedEmail.endsWith('@gmail.com') && password.trim()) {
+      setError('');
+      // Redirect to dashboard on successful login
+      navigate('/dashboard');
+    } else {
+      setError('Invalid credentials. Use a Gmail account.');
     }
   };
 
